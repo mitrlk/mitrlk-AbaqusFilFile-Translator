@@ -405,11 +405,12 @@ class ExportEngine:
         result = job["result"]
         setName = job["set"]
 
-        setResults = self.currentIncrement["elementResults"][result][setName]
+        allElementResults = self.currentIncrement["elementResults"][result]
 
-        for elTypeResults in setResults.values():
-            for elResults in elTypeResults.values():
-                elResults["computed"]["average"] = np.mean([qpRes for qpRes in elResults["qps"].values()], axis=0)
+        for elShape, elementsOfShape in self.elSets[setName].elementsByShape.items():
+            for el in elementsOfShape:
+                elResults = allElementResults[elShape][el.label]
+                elResults["computed"] = {"average": np.mean([qpRes for qpRes in elResults["qps"].values()], axis=0)} 
 
     def collectUelSDVToQpJobs(self, entries: list):
         """Abaqus UEL SDVs commonly should be computed to something resonable!
@@ -444,9 +445,9 @@ class ExportEngine:
         destination = job["destination"]
         qpSlices = job["qpSlices"]
 
-        source = self.currentIncrement["elementResults"]["SDV"][setName]
+        source = self.currentIncrement["elementResults"]["SDV"]
 
-        destination = self.currentIncrement["elementResults"][job["destination"]][setName]
+        destination = self.currentIncrement["elementResults"][job["destination"]]
 
         for ensElType, elements in source.items():
             for elLabel, uelResults in elements.items():
@@ -510,12 +511,11 @@ class ExportEngine:
 
         res = filDouble(recordContent)
         currentIncrement = self.currentIncrement
-        currentSetName = self.currentSetName
         currentElementType = self.currentElementType
         qp = self.currentIpt
         currentElementLabel = self.currentElementLabel
 
-        targetLocation = currentIncrement["elementResults"][result][currentSetName][currentElementType]
+        targetLocation = currentIncrement["elementResults"][result][currentElementType]
 
         if qp not in targetLocation[currentElementLabel]["qps"]:
             targetLocation[currentElementLabel]["qps"][qp] = res
@@ -678,7 +678,7 @@ class ExportEngine:
         currentIncrement["timeInc"] = timeInc
 
         # a level 4 RecursiveDefaultDict
-        currentIncrement["elementResults"] = RecursiveDefaultDict(4)  # result / set / shape / element number / location
+        currentIncrement["elementResults"] = RecursiveDefaultDict(3)  # result / shape / element number / location
 
         # a level 2 RecursiveDefaultDict
         currentIncrement["nodeResults"] = RecursiveDefaultDict(2)  # result / node

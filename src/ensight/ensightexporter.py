@@ -319,7 +319,7 @@ class EnsightExporter:
 
             setVariableDimensions = None
 
-            incrementVariableResults = elementResults[result][setName]
+            incrementVariableResults = elementResults[result]
             incrementVariableResultsArrays = {}
 
             print(" {:<20} ... {:<28}".format(exportJob.exportName if not i else "", setName))
