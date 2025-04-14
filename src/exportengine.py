@@ -410,7 +410,7 @@ class ExportEngine:
         for elShape, elementsOfShape in self.elSets[setName].elementsByShape.items():
             for el in elementsOfShape:
                 elResults = allElementResults[elShape][el.label]
-                elResults["computed"] = {"average": np.mean([qpRes for qpRes in elResults["qps"].values()], axis=0)} 
+                elResults["computed"] = {"average": np.mean([qpRes for qpRes in elResults["qps"].values()], axis=0)}
 
     def collectUelSDVToQpJobs(self, entries: list):
         """Abaqus UEL SDVs commonly should be computed to something resonable!
