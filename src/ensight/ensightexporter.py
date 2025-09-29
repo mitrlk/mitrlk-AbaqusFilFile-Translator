@@ -283,6 +283,8 @@ class EnsightExporter:
 
             try:
                 results = np.asarray(results, dtype=float)
+                if results.size == 0:
+                    continue  # no results for this set
             except:
                 raise Exception(
                     "Failed to set up all results {:} for all nodes in {:}. Try using fillMissingValuesTo= option?".format(
@@ -330,6 +332,8 @@ class EnsightExporter:
                         [elDict[el.label][location][which] for el in elSet.elementsByShape[elType]],
                         dtype=float,
                     )
+                    if results.size == 0:
+                        continue  # no results for this element type
                 except:
                     raise Exception(
                         "Failed to retrieve result '{:}' in '{:}/{:}' for set {:}. Does it exist?".format(
