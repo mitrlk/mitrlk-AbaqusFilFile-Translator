@@ -51,7 +51,7 @@ def filString(word):
 
 
 def filStrippedString(word):
-    return filString(word).tostring().decode("utf-8").strip()
+    return filString(word).tobytes().decode("utf-8").strip()
 
 
 def filDouble(word):
